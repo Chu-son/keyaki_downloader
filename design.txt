@@ -1,0 +1,23 @@
+var address
+var rootaddress #address_list‚ğ–Ø\‘¢‚É‚·‚é‚Æ–Ê”’‚»‚¤
+
+list address_list
+
+def listup_links(html):
+ return links_list
+
+def switchfile(file):
+ if file == html:
+  if file_path in address_list
+  address_list.append(file_path)
+
+  links = listup_links(html)
+  for link in links:
+   downloadfile()
+
+def downloadfile(address):
+ #download file
+ switchfile(file)
+ #save file
+
+
