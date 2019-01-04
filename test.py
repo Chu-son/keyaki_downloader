@@ -25,6 +25,9 @@ def get_soup(path):
     return soup, html
 
 def get_html_links(soup):
+    s = soup.find("box-newEntry")
+    if s is not None:
+        soup = s.decompose()
     link_list = [all_a.get("href") for all_a in soup.find_all("a")]
     return link_list
 
@@ -73,11 +76,11 @@ def is_external_site(url, baseurl):
 
 search_list = [
         "http://www\.keyakizaka46.com/s/k46o/search/",
-        "http://www\.keyakizaka46.com/s/k46o/diary/member/.*&ct=02",
-        "http://www\.keyakizaka46.com/s/k46o/diary/member/.*&ct=1[09]",
+        "http://www\.keyakizaka46.com/s/k46o/diary/member/.*&ct=19",
+        #"http://www\.keyakizaka46.com/s/k46o/diary/member/.*&ct=1[09]",
         "http://www\.keyakizaka46.com/s/k46o/diary/detail/",
-        "http://www\.keyakizaka46.com/s/k46o/artist/02",
-        "http://www\.keyakizaka46.com/s/k46o/artist/1[09]",
+        "http://www\.keyakizaka46.com/s/k46o/artist/19",
+        #"http://www\.keyakizaka46.com/s/k46o/artist/1[09]",
         ]
 def is_search_url(url):
     for search_url in search_list:
@@ -131,13 +134,6 @@ def download(url, baseurl):
     save_contents(url, html_src_path, sleeptime = 1)
     soup, html = get_soup(html_src_path)
 
-    html_links = get_html_links(soup.body)
-    for link in html_links:
-        localpath_link_dist = download(link, baseurl)
-        #print("link=",link)
-        if localpath_link_dist is not None:
-            html = replace_link2localpath(html, link, localpath_link_dist, html_src_path)
-
     content_links = get_content_links(soup)
     for link in content_links:
         localpath = to_localpath(link, savepath_root + "src/")
@@ -145,6 +141,12 @@ def download(url, baseurl):
             save_contents(link, localpath)
 
         html = replace_link2localpath(html, link, localpath, html_local_path)
+    
+    html_links = get_html_links(soup.body)
+    for link in html_links:
+        localpath_link_dist = download(link, baseurl)
+        if localpath_link_dist is not None:
+            html = replace_link2localpath(html, link, localpath_link_dist, html_src_path)
 
     link_replaced_path = save_replaced_html(html, html_local_path)
     return link_replaced_path 
